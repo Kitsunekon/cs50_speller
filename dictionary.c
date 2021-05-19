@@ -21,13 +21,16 @@ const unsigned int N = 1000;
 
 // Hash table
 node *table[N];
+// count total numbers of words in dictionary
 int word_count = 0;
 
 // Returns true if word is in dictionary, else false
 bool check(const char *word)
 {
     // TODO
+    // hash index
     int index = hash(word);
+    // travese through the linked list in index's array, and check if the word matches dictionary's.
     for (node *tmp = table[index]; tmp->next != NULL; tmp = tmp->next)
     {
         if (strcasecmp(tmp->word, word) == 0)
@@ -42,11 +45,13 @@ bool check(const char *word)
 unsigned int hash(const char *word)
 {
     // TODO
+    // iterate over all word and add all the ascii lower case alphabetical numeric value into index.
     int index = 0;
     for (int i = 0; word[i] != '\0'; i++)
     {
         index += tolower(word[i]);
     }
+    // make sure the return value isn't bigger than N.
     return (index % N);
 }
 
@@ -62,6 +67,7 @@ bool load(const char *dictionary)
         return false;
     }
     
+    // create a buffer and store the buffered word into the string.
     char buffer[LENGTH + 1];
     // read words from dictionary until the end of the file.
     while (fscanf(file, "%s", buffer) != EOF)
@@ -89,6 +95,7 @@ bool load(const char *dictionary)
             new_node->next = table[index];
             table[index] = new_node;
         }
+        // add 1 to word_counter everytime a word get added to the list
         word_count++;
     }
     return true;
@@ -98,6 +105,7 @@ bool load(const char *dictionary)
 unsigned int size(void)
 {
     // TODO
+    // return the size of dictionary.
     return word_count;
 }
 
@@ -107,10 +115,12 @@ bool unload(void)
     // TODO
     for (int i = 0; i < N; i++)
     {
+        // makes 3 pointers that help navigate through the hash table.
         node *head = table[i];
         node *trv = head;
         node *tmp = head;
         
+        // and therefore free all of the nodes.
         while (trv != NULL)
         {
             trv = trv->next;
